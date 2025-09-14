@@ -34,19 +34,28 @@
                                             <td>{{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('d-m-Y') }}</td>
                                             <td>{{ $siswa->kelas ? $siswa->kelas->nama : '-' }}</td>
                                             <td class="text-center">
+                                                <!-- Tombol Edit -->
                                                 <button type="button" class="btn btn-warning btn-sm text-white edit-btn"
                                                     data-id="{{ $siswa->id }}" data-nama="{{ $siswa->nama }}"
                                                     data-nisn="{{ $siswa->nisn }}"
-                                                    data-tanggal_lahir="{{ $siswa->tanggal_lahir }}"
+                                                    data-tanggal_lahir="{{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('Y-m-d') }}"
                                                     data-kelas_id="{{ $siswa->kelas_id }}" data-bs-toggle="modal"
                                                     data-bs-target="#editSiswaModal">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </button>
-                                                <button type="button" class="btn btn-danger btn-sm delete-btn"
-                                                    data-id="{{ $siswa->id }}" data-nama="{{ $siswa->nama }}"
-                                                    data-bs-toggle="modal" data-bs-target="#deleteSiswaModal">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
+
+
+
+                                                <!-- Tombol Hapus -->
+                                                <form action="{{ route('admin.siswa.destroy', $siswa->id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Yakin hapus siswa {{ $siswa->nama }}?')">
+                                                        <i class="fas fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty
@@ -55,6 +64,7 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -149,6 +159,7 @@
         </div>
     </div>
 
+
     <!-- Modal Hapus Siswa -->
     <div class="modal fade" id="deleteSiswaModal" tabindex="-1" aria-labelledby="deleteSiswaModalLabel"
         aria-hidden="true">
@@ -177,21 +188,24 @@
 @section('scripts')
     <script>
         // Edit Siswa: Isi form modal dengan data dari tombol
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                const nama = this.getAttribute('data-nama');
-                const nisn = this.getAttribute('data-nisn');
-                const tanggalLahir = this.getAttribute('data-tanggal_lahir');
-                const kelasId = this.getAttribute('data-kelas_id');
+        document.addEventListener('DOMContentLoaded', function() {
+            const editButtons = document.querySelectorAll('.edit-btn');
+            const editForm = document.getElementById('editForm');
 
-                document.getElementById('edit_nama').value = nama;
-                document.getElementById('edit_nisn').value = nisn;
-                document.getElementById('edit_tanggal_lahir').value = tanggalLahir;
-                document.getElementById('edit_kelas_id').value = kelasId;
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
 
-                const form = document.getElementById('editForm');
-                form.action = `/admin/siswa/${id}`;
+                    // set action form sesuai id
+                    editForm.action = `/admin/siswa/${id}`;
+
+                    // isi data ke input
+                    document.getElementById('edit_nama').value = this.dataset.nama;
+                    document.getElementById('edit_nisn').value = this.dataset.nisn;
+                    document.getElementById('edit_tanggal_lahir').value = this.dataset
+                        .tanggal_lahir;
+                    document.getElementById('edit_kelas_id').value = this.dataset.kelas_id;
+                });
             });
         });
 

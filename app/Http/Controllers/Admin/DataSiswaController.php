@@ -24,14 +24,14 @@ class DataSiswaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nisn' => 'required|string|unique:siswas,nisn',
             'tanggal_lahir' => 'required|date',
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
-        Siswa::create($request->validated());
+        Siswa::create($validated);
 
         return redirect()->route('admin.siswa.index')->with('success', 'Siswa berhasil ditambahkan.');
     }
@@ -52,14 +52,14 @@ class DataSiswaController extends Controller
 
     public function update(Request $request, Siswa $siswa)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nisn' => 'required|string|unique:siswas,nisn,' . $siswa->id,
             'tanggal_lahir' => 'required|date',
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
-        $siswa->update($request->validated());
+        $siswa->update($validated);
 
         return redirect()->route('admin.siswa.index')->with('success', 'Siswa berhasil diperbarui.');
     }

@@ -9,16 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         Schema::create('mata_pelajarans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->string('nama'); // contoh: Matematika, IPA, IPS
             $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
+            $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade');
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

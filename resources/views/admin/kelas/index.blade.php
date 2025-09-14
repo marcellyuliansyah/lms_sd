@@ -3,424 +3,338 @@
 @section('title', 'Manajemen Kelas')
 
 @section('content')
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Manajemen Kelas</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Kelas</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Alert Messages -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Manajemen Kelas</h1>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKelasModal">
+                        <i class="fas fa-plus"></i> Tambah Kelas
                     </button>
                 </div>
-            @endif
 
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            @endif
-
-            <!-- Main Card -->
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-school mr-2"></i>
-                        Data Kelas
-                    </h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createModal">
-                            <i class="fas fa-plus mr-1"></i>
-                            Tambah Kelas
-                        </button>
+                <!-- Alert Messages -->
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                </div>
+                @endif
 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="kelasTable" class="table table-bordered table-striped table-hover">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th width="5%" class="text-center">No</th>
-                                    <th width="30%">Nama Kelas</th>
-                                    <th width="35%">Wali Kelas</th>
-                                    <th width="15%" class="text-center">Jumlah Siswa</th>
-                                    <th width="15%" class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($kelas as $index => $item)
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <!-- Table -->
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="kelasTable">
+                                <thead class="table-dark">
                                     <tr>
-                                        <td class="text-center">{{ $index + 1 }}</td>
-                                        <td>
-                                            <strong>{{ $item->nama }}</strong>
-                                        </td>
-                                        <td>
-                                            @if($item->waliKelas)
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mr-2">
-                                                        <img src="{{ $item->waliKelas->avatar ?? asset('lte/dist/img/user2-160x160.jpg') }}" 
-                                                             alt="Avatar" class="img-circle" width="30" height="30">
-                                                    </div>
-                                                    <div>
-                                                        <strong>{{ $item->waliKelas->nama }}</strong><br>
-                                                        <small class="text-muted">{{ $item->waliKelas->nip ?? 'NIP belum diatur' }}</small>
-                                                    </div>
+                                        <th width="5%">No</th>
+                                        <th width="25%">Nama Kelas</th>
+                                        <th width="30%">Wali Kelas</th>
+                                        <th width="15%">Jumlah Siswa</th>
+                                        <th width="25%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($kelas as $index => $item)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>
+                                                <strong>{{ $item->nama }}</strong>
+                                            </td>
+                                            <td>
+                                                @if ($item->waliKelas)
+                                                    <span class="badge bg-success">{{ $item->waliKelas->nama }}</span>
+                                                @else
+                                                    <span class="badge bg-warning">Belum Ditentukan</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ $item->siswas_count }} Siswa</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-sm btn-info"
+                                                        data-bs-toggle="modal" data-bs-target="#showKelasModal"
+                                                        onclick="showKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->waliKelas ? $item->waliKelas->nama : 'Belum Ditentukan' }}', '{{ $item->siswas_count }}')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-warning"
+                                                        data-bs-toggle="modal" data-bs-target="#editKelasModal"
+                                                        onclick="editKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->wali_kelas_id }}')">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        data-bs-toggle="modal" data-bs-target="#deleteKelasModal"
+                                                        onclick="deleteKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->siswas_count }}')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </div>
-                                            @else
-                                                <span class="text-muted">
-                                                    <i class="fas fa-user-times mr-1"></i>
-                                                    Belum ada wali kelas
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge badge-info badge-lg">
-                                                {{ $item->siswa_count ?? 0 }} siswa
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-warning btn-sm edit-btn" 
-                                                        data-id="{{ $item->id }}"
-                                                        data-nama="{{ $item->nama }}"
-                                                        data-wali="{{ $item->wali_kelas_id }}"
-                                                        data-toggle="modal" data-target="#editModal"
-                                                        title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-danger btn-sm delete-btn" 
-                                                        data-id="{{ $item->id }}"
-                                                        data-nama="{{ $item->nama }}"
-                                                        title="Hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4">
-                                            <div class="text-muted">
-                                                <i class="fas fa-inbox fa-3x mb-3"></i><br>
-                                                <h5>Belum ada data kelas</h5>
-                                                <p>Klik tombol "Tambah Kelas" untuk menambah data kelas baru.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4">
+                                                <div class="text-muted">
+                                                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                                                    <p>Belum ada data kelas</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-</div>
-
-<!-- Modal Create -->
-<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <form action="{{ route('admin.kelas.store') }}" method="POST" id="createForm">
-                @csrf
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="createModalLabel">
-                        <i class="fas fa-plus mr-2"></i>
-                        Tambah Kelas Baru
-                    </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="create_nama" class="form-label">
-                                    <i class="fas fa-school mr-1"></i>
-                                    Nama Kelas <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" 
-                                       class="form-control @error('nama') is-invalid @enderror" 
-                                       id="create_nama" 
-                                       name="nama" 
-                                       value="{{ old('nama') }}"
-                                       placeholder="Contoh: X IPA 1, XI IPS 2"
-                                       required>
-                                @error('nama')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="create_wali_kelas_id" class="form-label">
-                                    <i class="fas fa-chalkboard-teacher mr-1"></i>
-                                    Wali Kelas
-                                </label>
-                                <select class="form-control select2 @error('wali_kelas_id') is-invalid @enderror" 
-                                        id="create_wali_kelas_id" 
-                                        name="wali_kelas_id">
-                                    <option value="">-- Pilih Wali Kelas --</option>
-                                    @foreach($gurus as $guru)
-                                        <option value="{{ $guru->id }}" {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
-                                            {{ $guru->nama }} {{ $guru->nip ? '(' . $guru->nip . ')' : '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('wali_kelas_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">Wali kelas bersifat opsional, bisa diatur nanti.</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        <i class="fas fa-times mr-1"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save mr-1"></i>
-                        Simpan Kelas
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
-<!-- Modal Edit -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <form method="POST" id="editForm">
-                @csrf
-                @method('PUT')
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="editModalLabel">
-                        <i class="fas fa-edit mr-2"></i>
-                        Edit Kelas
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_nama" class="form-label">
-                                    <i class="fas fa-school mr-1"></i>
-                                    Nama Kelas <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="edit_nama" 
-                                       name="nama" 
-                                       placeholder="Contoh: X IPA 1, XI IPS 2"
-                                       required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_wali_kelas_id" class="form-label">
-                                    <i class="fas fa-chalkboard-teacher mr-1"></i>
-                                    Wali Kelas
-                                </label>
-                                <select class="form-control select2" 
-                                        id="edit_wali_kelas_id" 
-                                        name="wali_kelas_id">
-                                    <option value="">-- Pilih Wali Kelas --</option>
-                                    @foreach($gurus as $guru)
-                                        <option value="{{ $guru->id }}">
-                                            {{ $guru->nama }} {{ $guru->nip ? '(' . $guru->nip . ')' : '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <small class="form-text text-muted">Wali kelas bersifat opsional, bisa diatur nanti.</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        <i class="fas fa-times mr-1"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-warning">
-                        <i class="fas fa-save mr-1"></i>
-                        Update Kelas
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Delete Confirmation -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Konfirmasi Hapus
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <i class="fas fa-trash-alt fa-4x text-danger mb-3"></i>
-                <h5>Apakah Anda yakin ingin menghapus kelas ini?</h5>
-                <p class="mb-0">Kelas: <strong id="delete_nama_kelas"></strong></p>
-                <small class="text-muted">Data yang sudah dihapus tidak dapat dikembalikan!</small>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fas fa-times mr-1"></i>
-                    Batal
-                </button>
-                <form method="POST" id="deleteForm" class="d-inline">
+    <!-- Modal Tambah Kelas -->
+    <div class="modal fade" id="addKelasModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('admin.kelas.store') }}" method="POST">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash mr-1"></i>
-                        Ya, Hapus!
-                    </button>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Kelas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
+                                name="nama" value="{{ old('nama') }}" required>
+                            @error('nama')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="wali_kelas_id" class="form-label">Wali Kelas</label>
+                            <select class="form-select @error('wali_kelas_id') is-invalid @enderror" id="wali_kelas_id"
+                                name="wali_kelas_id">
+                                <option value="">Pilih Wali Kelas (Opsional)</option>
+                                @foreach ($gurus as $guru)
+                                    <option value="{{ $guru->id }}"
+                                        {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
+                                        {{ $guru->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('wali_kelas_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Modal Edit Kelas -->
+    <div class="modal fade" id="editKelasModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Kelas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit_nama" class="form-label">Nama Kelas <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_nama" name="nama" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_wali_kelas_id" class="form-label">Wali Kelas</label>
+                            <select class="form-select" id="edit_wali_kelas_id" name="wali_kelas_id">
+                                <option value="">Pilih Wali Kelas (Opsional)</option>
+                                @foreach ($gurus as $guru)
+                                    <option value="{{ $guru->id }}">{{ $guru->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Show Kelas -->
+    <div class="modal fade" id="showKelasModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Kelas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td width="40%"><strong>Nama Kelas</strong></td>
+                            <td>: <span id="show_nama"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wali Kelas</strong></td>
+                            <td>: <span id="show_wali_kelas"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jumlah Siswa</strong></td>
+                            <td>: <span id="show_jumlah_siswa"></span> siswa</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Delete Kelas -->
+    <div class="modal fade" id="deleteKelasModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">Hapus Kelas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Peringatan!</strong> Tindakan ini tidak dapat dibatalkan.
+                        </div>
+                        <p>Apakah Anda yakin ingin menghapus kelas <strong id="delete_nama"></strong>?</p>
+                        <div id="delete_warning" style="display: none;">
+                            <div class="alert alert-danger">
+                                <i class="fas fa-times-circle"></i>
+                                Kelas ini masih memiliki <strong id="delete_jumlah_siswa"></strong> siswa dan tidak dapat
+                                dihapus.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Ya, Hapus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            function editKelas(id, nama, waliKelasId) {
+                document.getElementById('editForm').action = '{{ url('admin/kelas') }}/' + id;
+                document.getElementById('edit_nama').value = nama;
+                document.getElementById('edit_wali_kelas_id').value = waliKelasId || '';
+            }
+
+            function showKelas(id, nama, waliKelas, jumlahSiswa) {
+                document.getElementById('show_nama').textContent = nama;
+                document.getElementById('show_wali_kelas').textContent = waliKelas;
+                document.getElementById('show_jumlah_siswa').textContent = jumlahSiswa;
+            }
+
+            function deleteKelas(id, nama, jumlahSiswa) {
+                document.getElementById('deleteForm').action = '{{ url('admin/kelas') }}/' + id;
+                document.getElementById('delete_nama').textContent = nama;
+                document.getElementById('delete_jumlah_siswa').textContent = jumlahSiswa;
+
+                const warningDiv = document.getElementById('delete_warning');
+                const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+                if (parseInt(jumlahSiswa) > 0) {
+                    warningDiv.style.display = 'block';
+                    confirmBtn.style.display = 'none';
+                } else {
+                    warningDiv.style.display = 'none';
+                    confirmBtn.style.display = 'inline-block';
+                }
+            }
+
+            // Auto hide alerts after 5 seconds
+            document.addEventListener('DOMContentLoaded', function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    setTimeout(function() {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 5000);
+                });
+            });
+
+            // Reopen modal with errors
+            @if ($errors->any())
+                @if (old('_method') == 'PUT')
+                    var editModal = new bootstrap.Modal(document.getElementById('editKelasModal'));
+                    editModal.show();
+                @else
+                    var addModal = new bootstrap.Modal(document.getElementById('addKelasModal'));
+                    addModal.show();
+                @endif
+            @endif
+        </script>
+    @endpush
+
+    @push('styles')
+        <style>
+            .table th {
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+
+            .btn-group .btn {
+                margin-right: 2px;
+            }
+
+            .btn-group .btn:last-child {
+                margin-right: 0;
+            }
+
+            .modal-header {
+                border-bottom: 2px solid #dee2e6;
+            }
+
+            .modal-footer {
+                border-top: 2px solid #dee2e6;
+            }
+
+            .badge {
+                font-size: 0.8rem;
+            }
+
+            .card {
+                border: none;
+                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            }
+
+            .table-responsive {
+                border-radius: 0.35rem;
+            }
+        </style>
+    @endpush
 @endsection
-
-@push('styles')
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="{{ asset('lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-<!-- Select2 CSS -->
-<link rel="stylesheet" href="{{ asset('lte/plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
-<style>
-.table th {
-    vertical-align: middle;
-    font-weight: 600;
-}
-.table td {
-    vertical-align: middle;
-}
-.btn-group .btn {
-    margin: 0 1px;
-}
-.modal-header {
-    border-bottom: 2px solid rgba(0,0,0,0.1);
-}
-.form-label {
-    font-weight: 600;
-    color: #495057;
-}
-.select2-container .select2-selection--single {
-    height: 38px;
-    border: 1px solid #ced4da;
-}
-.select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
-    line-height: 36px;
-}
-</style>
-@endpush
-
-@push('scripts')
-<!-- DataTables JS -->
-<script src="{{ asset('lte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('lte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<!-- Select2 JS -->
-<script src="{{ asset('lte/plugins/select2/js/select2.full.min.js') }}"></script>
-
-<script>
-$(document).ready(function() {
-    // Initialize DataTable
-    $('#kelasTable').DataTable({
-        responsive: true,
-        autoWidth: false,
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
-        },
-        columnDefs: [
-            { orderable: false, targets: [4] }
-        ],
-        order: [[1, 'asc']]
-    });
-
-    // Initialize Select2
-    $('.select2').select2({
-        theme: 'bootstrap4',
-        width: '100%'
-    });
-
-    // Edit Modal Handler
-    $('.edit-btn').click(function() {
-        const id = $(this).data('id');
-        const nama = $(this).data('nama');
-        const wali = $(this).data('wali');
-        
-        $('#edit_nama').val(nama);
-        $('#edit_wali_kelas_id').val(wali).trigger('change');
-        $('#editForm').attr('action', `/admin/kelas/${id}`);
-    });
-
-    // Delete Modal Handler
-    $('.delete-btn').click(function() {
-        const id = $(this).data('id');
-        const nama = $(this).data('nama');
-        
-        $('#delete_nama_kelas').text(nama);
-        $('#deleteForm').attr('action', `/admin/kelas/${id}`);
-        $('#deleteModal').modal('show');
-    });
-
-    // Reset form when modal is closed
-    $('.modal').on('hidden.bs.modal', function() {
-        $(this).find('form')[0].reset();
-        $(this).find('.is-invalid').removeClass('is-invalid');
-        $(this).find('.invalid-feedback').remove();
-        $('.select2').val(null).trigger('change');
-    });
-
-    // Auto-hide alerts
-    setTimeout(function() {
-        $('.alert').fadeOut('slow');
-    }, 5000);
-});
-</script>
-@endpush

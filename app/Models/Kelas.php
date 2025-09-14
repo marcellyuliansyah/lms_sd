@@ -25,4 +25,9 @@ class Kelas extends Model
     {
         return $this->hasMany(JadwalUjian::class);
     }
+
+    public function mataPelajarans()
+    {
+        return $this->hasMany(MataPelajaran::class);
+    }
 }

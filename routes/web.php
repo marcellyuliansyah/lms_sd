@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DataGuruController;
 use App\Http\Controllers\Admin\DataKelasController;
 use App\Http\Controllers\Admin\DataSiswaController;
+use App\Http\Controllers\Admin\MataPelajaranController;
 use App\Http\Controllers\Guru\GuruController;
+use App\Http\Controllers\Guru\KelasSayaController;
 use App\Http\Controllers\Siswa\SiswaController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,19 +29,21 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // === DASHBOARD ===
 Route::middleware(['auth', 'chaceLogout'])->group(function () {
-    
+
     // ADMIN
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::post('/users/create', [AdminController::class, 'createUser'])->name('users.create');
         Route::resource('guru', DataGuruController::class);
         Route::resource('siswa', DataSiswaController::class);
         Route::resource('kelas', DataKelasController::class);
-
+        Route::resource('mapel', MataPelajaranController::class);
     });
 
     // GURU
     Route::prefix('guru')->name('guru.')->middleware('role:guru')->group(function () {
         Route::get('/dashboard', [GuruController::class, 'index'])->name('dashboard');
+        Route::resource('kelas', KelasSayaController::class);
     });
 
     // SISWA

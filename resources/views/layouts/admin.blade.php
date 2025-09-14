@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css') }}">
     {{-- Google Font (Opsional) --}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     @stack('styles')
 </head>
@@ -34,16 +38,21 @@
 
         {{-- Footer --}}
         <footer class="main-footer text-sm text-center">
-            <strong>&copy; {{ date('Y') }} LMS SD.</strong> All rights reserved.
+            <strong>&copy; {{ date('Y') }} LMS SD ISLAM TOMPOKERSAN.</strong> All rights reserved.
         </footer>
     </div>
 
     {{-- AdminLTE JS --}}
+    <!-- Bootstrap JS (di bagian bawah body) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('lte/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('lte/dist/js/adminlte.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @stack('scripts')
+    @yield('scripts')
 </body>
 
 </html>
