@@ -1,5 +1,6 @@
 {{-- components/sidebar.blade.php --}}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
     {{-- Brand Logo --}}
     <a href="{{ url('/') }}" class="brand-link text-decoration-none">
         <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
@@ -186,40 +187,46 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route("guru.kelas.index") }}" class="nav-link {{ request()->is('guru/kelas*') ? 'active' : '' }}">
+                        <a href="{{ route('guru.kelas.index') }}"
+                            class="nav-link {{ request()->is('guru/kelas*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Kelas Saya</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('guru/materi*') ? 'active' : '' }}">
+                        <a href="{{ route('guru.materi.index') }}"
+                            class="nav-link {{ request()->is('guru/materi*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-book"></i>
                             <p>Materi</p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('guru/tugas*') ? 'active' : '' }}">
+                    {{-- <li class="nav-item"> --}}
+                        {{-- <a href="{{ route('guru.tugas.index') }}"
+                            class="nav-link {{ request()->is('guru/tugas*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tasks"></i>
                             <p>Tugas</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('guru/soal*') ? 'active' : '' }}">
+                        <a href="{{ route('guru.ujian.index') }}"
+                            class="nav-link {{ request()->is('guru/ujian*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-question-circle"></i>
                             <p>Soal Ujian</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('guru/nilai*') ? 'active' : '' }}">
+                        <a href="{{ route('guru.nilai.index') }}"
+                            class="nav-link {{ request()->is('guru/nilai*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-clipboard-list"></i>
                             <p>Nilai Siswa</p>
                         </a>
-                    </li>
+                    </li> --}}
                 @endif
+
 
                 {{-- Menu Khusus Siswa --}}
                 @if ($role === 'siswa')
@@ -325,18 +332,18 @@
         .brand-text {
             font-size: 0.9rem;
         }
-        
+
         .sidebar .nav-link p {
             font-size: 0.85rem;
         }
     }
 
     /* Menu active state improvements */
-    .nav-item.menu-open > .nav-link {
+    .nav-item.menu-open>.nav-link {
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    .nav-item.menu-open > .nav-link .right {
+    .nav-item.menu-open>.nav-link .right {
         transform: rotate(-90deg);
         transition: transform 0.3s ease;
     }

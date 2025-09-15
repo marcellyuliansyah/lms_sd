@@ -8,6 +8,10 @@ use App\Http\Controllers\Admin\DataSiswaController;
 use App\Http\Controllers\Admin\MataPelajaranController;
 use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Guru\KelasSayaController;
+use App\Http\Controllers\Guru\MateriController;
+use App\Http\Controllers\Guru\NilaiController;
+use App\Http\Controllers\Guru\TugasController;
+use App\Http\Controllers\Guru\UjianController;
 use App\Http\Controllers\Siswa\SiswaController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +48,10 @@ Route::middleware(['auth', 'chaceLogout'])->group(function () {
     Route::prefix('guru')->name('guru.')->middleware('role:guru')->group(function () {
         Route::get('/dashboard', [GuruController::class, 'index'])->name('dashboard');
         Route::resource('kelas', KelasSayaController::class);
+        Route::resource('materi', MateriController::class);
+        Route::resource('tugas', TugasController::class);
+        Route::resource('ujian', UjianController::class);
+        Route::resource('nilai', NilaiController::class);
     });
 
     // SISWA
