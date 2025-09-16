@@ -49,7 +49,9 @@ Route::middleware(['auth', 'chaceLogout'])->group(function () {
         Route::get('/dashboard', [GuruController::class, 'index'])->name('dashboard');
         Route::resource('kelas', KelasSayaController::class);
         Route::resource('materi', MateriController::class);
-        Route::resource('tugas', TugasController::class);
+        Route::resource('tugas', TugasController::class)->parameters([
+            'tugas' => 'tugas'
+        ]);
         Route::resource('ujian', UjianController::class);
         Route::resource('nilai', NilaiController::class);
     });
