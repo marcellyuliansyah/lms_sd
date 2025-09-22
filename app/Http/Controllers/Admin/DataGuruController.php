@@ -8,9 +8,29 @@ use Illuminate\Http\Request;
 
 class DataGuruController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $gurus = Guru::latest()->paginate(10);
+        $query = Guru::query();
+        
+        // Jika ada parameter search
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'LIKE', "%{$search}%")
+                  ->orWhere('nip', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%")
+                  ->orWhere('telepon', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $gurus = $query->latest()->paginate(10);
+        
+        // Maintain search parameter in pagination links
+        if ($request->has('search')) {
+            $gurus->appends(['search' => $request->search]);
+        }
+        
         return view('admin.guru.index', compact('gurus'));
     }
 
@@ -55,6 +75,4 @@ class DataGuruController extends Controller
         $guru->delete();
         return redirect()->route('admin.guru.index')->with('success', 'Guru berhasil dihapus');
     }
-
-    
 }
