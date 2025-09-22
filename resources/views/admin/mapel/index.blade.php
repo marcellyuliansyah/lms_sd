@@ -18,7 +18,6 @@
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
@@ -362,7 +361,7 @@
                     setTimeout(function() {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
-                    }, 5000);
+                    }, 2000);
                 });
 
                 // Populate select options

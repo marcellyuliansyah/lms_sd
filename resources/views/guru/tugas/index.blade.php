@@ -13,11 +13,11 @@
 
         <!-- Alert -->
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
+            <div id="alertBox" class="alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
+
 
         <!-- Tabel -->
         <div class="card shadow-sm">
@@ -154,18 +154,26 @@
             methodInput.value = "PUT"
             modalTitle.innerText = "Edit Tugas"
 
-            // isi form dari data tugas
             form.matapelajaran_id.value = tugas.matapelajaran_id
             form.kelas_id.value = tugas.kelas_id ?? ''
             form.judul.value = tugas.judul
             form.deskripsi.value = tugas.deskripsi ?? ''
-
             if (tugas.deadline) {
-                // format deadline → YYYY-MM-DDTHH:mm
                 form.deadline.value = tugas.deadline.substring(0, 16)
             }
 
             modal.show()
         }
+
+        // Auto-hide alert dalam 2 detik
+        document.addEventListener("DOMContentLoaded", function() {
+            let alertBox = document.getElementById("alertBox");
+            if (alertBox) {
+                setTimeout(() => {
+                    let alert = new bootstrap.Alert(alertBox);
+                    alert.close();
+                }, 2000); // 2 detik
+            }
+        });
     </script>
 @endpush

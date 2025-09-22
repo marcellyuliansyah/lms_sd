@@ -4,6 +4,14 @@
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
+
+                {{-- Notifikasi sukses --}}
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Sukses!</strong> {{ session('success') }}
+                    </div>
+                @endif
+
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Data Siswa</h5>
@@ -218,6 +226,17 @@
                 document.getElementById('deleteNama').textContent = nama;
                 document.getElementById('deleteForm').action = `/admin/siswa/${id}`;
             });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let alert = document.querySelector('.alert');
+            if (alert) {
+                setTimeout(() => {
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    setTimeout(() => alert.remove(), 500); // hapus dari DOM setelah animasi
+                }, 2000); // 2 detik
+            }
         });
 
         // Opsional: Gunakan SweetAlert2 untuk tampilan lebih baik

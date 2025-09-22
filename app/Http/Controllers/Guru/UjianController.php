@@ -4,62 +4,58 @@ namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Ujian;
+use App\Models\Soal;
+use App\Models\Mapel;
+use App\Models\MataPelajaran;
+use Illuminate\Support\Facades\Auth;
 
 class UjianController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $ujians = Ujian::where('guru_id', Auth::id())->with('mapel')->get();
+        $mapels = MataPelajaran::all(); // ambil semua mapel
+        return view('guru.soalujian.index', compact('ujians', 'mapels'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        //
+        $mapels = MataPelajaran::all();
+        return view('guru.ujian.create', compact('mapels'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $ujian = Ujian::create([
+            'mapel_id' => $request->mapel_id,
+            'guru_id' => Auth::id(),
+            'judul' => $request->judul,
+            'waktu_mulai' => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai
+        ]);
+
+        return redirect()->route('guru.ujian.index', $ujian->id)->with('success', 'Ujian berhasil dibuat. Tambahkan soal!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $ujian = Ujian::with('soal')->findOrFail($id);
+        return view('guru.ujian.edit', compact('ujian'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $ujian = Ujian::findOrFail($id);
+        $ujian->update($request->only(['judul', 'waktu_mulai', 'waktu_selesai']));
+        return redirect()->route('guru.ujian.index')->with('success', 'Ujian berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $ujian = Ujian::findOrFail($id);
+        $ujian->delete();
+        return redirect()->route('guru.ujian.index')->with('success', 'Ujian berhasil dihapus.');
     }
 }

@@ -187,13 +187,15 @@
                                 <div class="row g-2 mb-3">
                                     <div class="col-6">
                                         <div class="text-center p-2 bg-light rounded">
-                                            <div class="fw-bold text-primary">{{ $k->siswas ? $k->siswas->count() : 0 }}</div>
+                                            <div class="fw-bold text-primary">{{ $k->siswas ? $k->siswas->count() : 0 }}
+                                            </div>
                                             <small class="text-muted">Siswa</small>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="text-center p-2 bg-light rounded">
-                                            <div class="fw-bold text-info">{{ $k->mataPelajarans ? $k->mataPelajarans->count() : 0 }}</div>
+                                            <div class="fw-bold text-info">
+                                                {{ $k->mataPelajarans ? $k->mataPelajarans->count() : 0 }}</div>
                                             <small class="text-muted">Mapel</small>
                                         </div>
                                     </div>

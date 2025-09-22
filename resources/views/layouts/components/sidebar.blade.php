@@ -210,7 +210,7 @@
                         </a>
                     </li>
 
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                         <a href="{{ route('guru.ujian.index') }}"
                             class="nav-link {{ request()->is('guru/ujian*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-question-circle"></i>
@@ -218,7 +218,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{ route('guru.nilai.index') }}"
                             class="nav-link {{ request()->is('guru/nilai*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-clipboard-list"></i>
