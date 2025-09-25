@@ -9,10 +9,33 @@ use Illuminate\Http\Request;
 
 class DataSiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $siswas = Siswa::with('kelas')->get();
+        $query = Siswa::with('kelas');
+
+        // Filter berdasarkan search
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'LIKE', "%{$search}%")
+                  ->orWhere('nisn', 'LIKE', "%{$search}%")
+                  ->orWhereHas('kelas', function($kelasQuery) use ($search) {
+                      $kelasQuery->where('nama', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filter berdasarkan kelas
+        if ($request->has('kelas_filter') && !empty($request->kelas_filter)) {
+            $query->where('kelas_id', $request->kelas_filter);
+        }
+
+        // Order by nama
+        $query->orderBy('nama', 'asc');
+
+        $siswas = $query->get();
         $kelas = Kelas::orderBy('nama', 'asc')->get();
+        
         return view('admin.siswa.index', compact('siswas', 'kelas'));
     }
 
@@ -47,8 +70,6 @@ class DataSiswaController extends Controller
         $kelas = Kelas::all();
         return view('admin.siswa.edit', compact('siswa', 'kelas'));
     }
-
-
 
     public function update(Request $request, Siswa $siswa)
     {

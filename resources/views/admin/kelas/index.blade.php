@@ -7,13 +7,17 @@
         <div class="row">
             <div class="col-12">
                 <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Manajemen Kelas</h1>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKelasModal">
-                        <i class="fas fa-plus"></i> Tambah Kelas
-                    </button>
-                </div>
-
+                <div class="bg-gradient-navy text-white rounded-3 p-2 mb-3 shadow">
+                        <div class="d-flex justify-content-between align-items-center p-3">
+                            <h1 class="h3 h3 card-title mb-0">
+                            <i class="fas fa-school me-2"></i>Manajemen Kelas
+                            </h1>
+                            <button type="button" class="btn btn-primary btn-sm mt-2 mt-md-0" data-bs-toggle="modal"
+                                data-bs-target="#addKelasModal">
+                                <i class="fas fa-plus-circle"></i> Tambah Kelas
+                            </button>
+                        </div>
+                    </div>
                 <!-- Alert Messages -->
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -61,18 +65,18 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-sm btn-info"
-                                                        data-bs-toggle="modal" data-bs-target="#showKelasModal"
+                                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                                        data-bs-target="#showKelasModal"
                                                         onclick="showKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->waliKelas ? $item->waliKelas->nama : 'Belum Ditentukan' }}', '{{ $item->siswas_count }}')">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-warning"
-                                                        data-bs-toggle="modal" data-bs-target="#editKelasModal"
+                                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                        data-bs-target="#editKelasModal"
                                                         onclick="editKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->wali_kelas_id }}')">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-danger"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteKelasModal"
+                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteKelasModal"
                                                         onclick="deleteKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->siswas_count }}')">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -123,8 +127,7 @@
                                 name="wali_kelas_id">
                                 <option value="">Pilih Wali Kelas (Opsional)</option>
                                 @foreach ($gurus as $guru)
-                                    <option value="{{ $guru->id }}"
-                                        {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
+                                    <option value="{{ $guru->id }}" {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
                                         {{ $guru->nama }}
                                     </option>
                                 @endforeach
@@ -156,8 +159,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="edit_nama" class="form-label">Nama Kelas <span
-                                    class="text-danger">*</span></label>
+                            <label for="edit_nama" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="edit_nama" name="nama" required>
                         </div>
                         <div class="mb-3">
@@ -276,10 +278,10 @@
             }
 
             // Auto hide alerts after 5 seconds
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    setTimeout(function() {
+                alerts.forEach(function (alert) {
+                    setTimeout(function () {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
                     }, 2000);
@@ -292,7 +294,7 @@
                     var editModal = new bootstrap.Modal(document.getElementById('editKelasModal'));
                     editModal.show();
                 @else
-                    var addModal = new bootstrap.Modal(document.getElementById('addKelasModal'));
+                                    var addModal = new bootstrap.Modal(document.getElementById('addKelasModal'));
                     addModal.show();
                 @endif
             @endif

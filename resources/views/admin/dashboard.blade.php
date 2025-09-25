@@ -9,11 +9,15 @@
         <!-- Judul Halaman -->
         <div class="row mb-3">
             <div class="col-12">
-                <h1 class="h3">Selamat Datang, <b>{{ Auth::user()->name }}</b> 👋</h1>
-                <p class="text-muted">
-                    Anda login sebagai
-                    <span class="badge bg-primary">{{ Auth::user()->role }}</span>
-                </p>
+                <div class="bg-gradient-navy text-white rounded-3 p-4 shadow">
+                    <div class="row align-items-center">
+                        <h1 class="h3">Selamat Datang, <b>{{ Auth::user()->name }}</b> 👋</h1>
+                        <p class="text-white">
+                            Anda login sebagai
+                            <span class="badge bg-primary">{{ Auth::user()->role }}</span>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -11,16 +11,18 @@
             </div>
         @endif
 
-        <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                <h3 class="card-title mb-0">
-                    <i class="fas fa-chalkboard-teacher me-2"></i> Data Guru
-                </h3>
+        <div class="bg-gradient-navy text-white rounded-3 p-2 mb-3 shadow">
+            <div class="d-flex justify-content-between align-items-center p-3">
+                <h1 class="h3 card-title mb-0">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>Kelola Data Guru
+                </h1>
                 <a href="{{ route('admin.guru.create') }}" class="btn btn-primary btn-sm mt-2 mt-md-0">
                     <i class="fas fa-plus-circle"></i> Tambah Guru
                 </a>
             </div>
+        </div>
 
+        <div class="card shadow-sm">
             <div class="card-body">
                 {{-- Search Form --}}
                 <div class="row mb-3">
@@ -121,8 +123,7 @@
                                             Tidak ada data guru yang sesuai dengan pencarian
                                             "<strong>{{ request('search') }}</strong>"
                                             <br>
-                                            <a href="{{ route('admin.guru.index') }}"
-                                                class="btn btn-sm btn-outline-primary mt-2">
+                                            <a href="{{ route('admin.guru.index') }}" class="btn btn-sm btn-outline-primary mt-2">
                                                 <i class="fas fa-arrow-left"></i> Kembali ke semua data
                                             </a>
                                         @else
@@ -162,7 +163,7 @@
     @push('scripts')
         <script>
             // 🔔 Auto-hide alert setelah 5 detik
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 let alertBox = document.getElementById("alertBox");
                 if (alertBox) {
                     setTimeout(() => {
