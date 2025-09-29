@@ -36,7 +36,7 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th width="5%">No</th>
-                                        <th width="25%">Nama Kelas</th>
+                                        <th width="25%">Kelas</th>
                                         <th width="30%">Wali Kelas</th>
                                         <th width="15%">Jumlah Siswa</th>
                                         <th width="25%">Aksi</th>

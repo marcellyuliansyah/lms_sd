@@ -21,13 +21,10 @@ class Kelas extends Model
         return $this->hasMany(Siswa::class);
     }
 
-    public function jadwalUjians()
+        public function mapels()
     {
-        return $this->hasMany(JadwalUjian::class);
-    }
-
-    public function mataPelajarans()
-    {
-        return $this->hasMany(MataPelajaran::class);
+        return $this->belongsToMany(Mapel::class, 'kelas_mapel')
+                    ->withPivot('guru_id')
+                    ->withTimestamps();
     }
 }

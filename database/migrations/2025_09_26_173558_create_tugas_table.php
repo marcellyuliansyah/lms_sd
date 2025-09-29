@@ -9,14 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-
     public function up(): void
     {
-        Schema::create('mata_pelajarans', function (Blueprint $table) {
+        Schema::create('tugas', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); // contoh: Matematika, IPA, IPS
+            $table->foreignId('kelas_mapel_id')->constrained('kelas_mapel')->onDelete('cascade');
             $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
-            $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade');
+            $table->string('judul');
+            $table->text('deskripsi')->nullable();
+            $table->dateTime('deadline')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mata_pelajarans');
+        Schema::dropIfExists('tugas');
     }
 };

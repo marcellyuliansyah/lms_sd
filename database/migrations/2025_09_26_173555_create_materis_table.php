@@ -9,16 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('tugas', function (Blueprint $table) {
+        Schema::create('materis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('matapelajaran_id')->constrained('mata_pelajarans')->cascadeOnDelete();
-            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->cascadeOnDelete();
-            $table->foreignId('guru_id')->constrained('users')->cascadeOnDelete(); // hanya guru
+            $table->foreignId('kelas_mapel_id')->constrained('kelas_mapel')->onDelete('cascade');
+            $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
             $table->string('judul');
             $table->text('deskripsi')->nullable();
-            $table->dateTime('deadline');
+            $table->string('file')->nullable(); // jika ada upload file
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tugas');
+        Schema::dropIfExists('materis');
     }
 };

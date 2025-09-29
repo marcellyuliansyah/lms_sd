@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Tugas extends Model
 {
-    protected $table = 'tugas';
-    protected $guarded = [];
+    use HasFactory;
 
-    public function guru()   { return $this->belongsTo(User::class, 'guru_id'); }
-    public function matapelajaran()  { return $this->belongsTo(MataPelajaran::class, 'matapelajaran_id'); }
-    public function kelas()  { return $this->belongsTo(Kelas::class, 'kelas_id'); }
-    public function jawaban(){ return $this->hasMany(JawabanTugas::class, 'tugas_id'); }
+    protected $fillable = ['kelas_mapel_id','guru_id','judul','deskripsi','deadline'];
+
+    public function kelasMapel()
+    {
+        return $this->belongsTo(KelasMapel::class);
+    }
+
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class);
+    }
 }

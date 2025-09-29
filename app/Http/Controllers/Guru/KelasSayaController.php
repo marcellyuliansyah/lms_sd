@@ -3,24 +3,30 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
-use App\Models\Kelas;
+use App\Models\KelasMapel;
 use Illuminate\Support\Facades\Auth;
 
 class KelasSayaController extends Controller
 {
     public function index()
     {
-        $guru = Auth::user();
+        $guru = Auth::user()->guru;
+        if (!$guru) {
+            abort(403, 'Akun Anda belum terdaftar sebagai guru.');
+        }
 
-        // Ambil semua kelas dengan relasi yang dibutuhkan
-        $kelas = Kelas::with(['waliKelas', 'siswas', 'mataPelajarans'])->get();
+        $kelasSaya = KelasMapel::with(['kelas','mapel'])
+            ->where('guru_id', $guru->id)
+            ->get();
 
-        return view('guru.kelas.index', compact('kelas', 'guru'));
+        return view('guru.kelas.index', compact('kelasSaya'));
     }
 
-    public function show($id)
+    public function show(KelasMapel $kela)
     {
-        $kelas = Kelas::with(['waliKelas', 'mataPelajarans', 'siswas'])->findOrFail($id);
-        return view('guru.kelas.show', compact('kelas'));
+        $guru = Auth::user()->guru;
+        abort_if($kela->guru_id !== $guru->id, 403);
+
+        return view('guru.kelas.show', compact('kela'));
     }
 }

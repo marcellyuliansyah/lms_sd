@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DataGuruController extends Controller
@@ -36,7 +37,8 @@ class DataGuruController extends Controller
 
     public function create()
     {
-        return view('admin.guru.create');
+        $users = User::where('role', 'guru')->get();
+        return view('admin.guru.create', compact('users'));
     }
 
     public function store(Request $request)
@@ -46,6 +48,7 @@ class DataGuruController extends Controller
             'nip'     => 'required|string|max:30|unique:gurus,nip',
             'email'   => 'required|email|unique:gurus,email',
             'telepon' => 'nullable|string|max:20',
+            'user_id' => 'required|exists:users,id',
         ]);
 
         Guru::create($request->all());

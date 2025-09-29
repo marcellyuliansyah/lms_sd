@@ -5,7 +5,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DataGuruController;
 use App\Http\Controllers\Admin\DataKelasController;
 use App\Http\Controllers\Admin\DataSiswaController;
-use App\Http\Controllers\Admin\MataPelajaranController;
+use App\Http\Controllers\Admin\DataKelasMapelController;
+use App\Http\Controllers\Admin\DataMapelController;
 use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Guru\KelasSayaController;
 use App\Http\Controllers\Guru\MateriController;
@@ -41,7 +42,8 @@ Route::middleware(['auth', 'chaceLogout'])->group(function () {
         Route::resource('guru', DataGuruController::class);
         Route::resource('siswa', DataSiswaController::class);
         Route::resource('kelas', DataKelasController::class);
-        Route::resource('mapel', MataPelajaranController::class);
+        Route::resource('mapel', DataMapelController::class);
+        Route::resource('kelasmapel', DataKelasMapelController::class);
     });
 
     // GURU
@@ -52,8 +54,6 @@ Route::middleware(['auth', 'chaceLogout'])->group(function () {
         Route::resource('tugas', TugasController::class)->parameters([
             'tugas' => 'tugas'
         ]);
-        Route::resource('ujian', UjianController::class);
-        Route::resource('nilai', NilaiController::class);
     });
 
     // SISWA

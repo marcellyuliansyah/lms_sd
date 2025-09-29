@@ -124,7 +124,14 @@
                                 <a href="{{ route('admin.mapel.index') }}"
                                     class="nav-link {{ request()->is('admin/mapel*') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Mata Pelajaran</p>
+                                    <p>Data Mapel</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.kelasmapel.index') }}"
+                                    class="nav-link {{ request()->is('admin/mapel*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Kelas Mapel</p>
                                 </a>
                             </li>
                         </ul>
@@ -133,41 +140,6 @@
                     <li class="nav-header text-uppercase font-weight-bold">
                         <i class="fas fa-clipboard-check mr-2"></i>
                         Manajemen Ujian
-                    </li>
-
-                    {{-- Manajemen Ujian --}}
-                    <li
-                        class="nav-item {{ request()->is('admin/jadwal-ujian*') || request()->is('admin/soal*') || request()->is('admin/hasil-ujian*') ? 'menu-open' : '' }}">
-                        <a href="#"
-                            class="nav-link {{ request()->is('admin/jadwal-ujian*') || request()->is('admin/soal*') || request()->is('admin/hasil-ujian*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tasks"></i>
-                            <p>
-                                Ujian & Evaluasi
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ request()->is('admin/jadwal-ujian*') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Jadwal Ujian</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link {{ request()->is('admin/soal*') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Bank Soal</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ request()->is('admin/hasil-ujian*') ? 'active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Hasil Ujian</p>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
 
                     {{-- Laporan --}}
@@ -186,6 +158,7 @@
                         Menu Guru
                     </li>
 
+                    {{-- Kelas yang dia ajar --}}
                     <li class="nav-item">
                         <a href="{{ route('guru.kelas.index') }}"
                             class="nav-link {{ request()->is('guru/kelas*') ? 'active' : '' }}">
@@ -194,6 +167,7 @@
                         </a>
                     </li>
 
+                    {{-- Materi untuk kelas-mapel --}}
                     <li class="nav-item">
                         <a href="{{ route('guru.materi.index') }}"
                             class="nav-link {{ request()->is('guru/materi*') ? 'active' : '' }}">
@@ -202,6 +176,7 @@
                         </a>
                     </li>
 
+                    {{-- Tugas untuk kelas-mapel --}}
                     <li class="nav-item">
                         <a href="{{ route('guru.tugas.index') }}"
                             class="nav-link {{ request()->is('guru/tugas*') ? 'active' : '' }}">
@@ -210,22 +185,16 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{{ route('guru.ujian.index') }}"
-                            class="nav-link {{ request()->is('guru/ujian*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-question-circle"></i>
-                            <p>Soal Ujian</p>
-                        </a>
-                    </li>
-
+                    {{-- Opsional: Rekap nilai siswa --}}
                     {{-- <li class="nav-item">
                         <a href="{{ route('guru.nilai.index') }}"
                             class="nav-link {{ request()->is('guru/nilai*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-clipboard-list"></i>
-                            <p>Nilai Siswa</p>
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Rekap Nilai</p>
                         </a>
                     </li> --}}
                 @endif
+
 
 
                 {{-- Menu Khusus Siswa --}}

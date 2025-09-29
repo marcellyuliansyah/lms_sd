@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
+use App\Models\Guru;
 use App\Models\Tugas;
-use App\Models\Kelas;
-use App\Models\MataPelajaran;
+use App\Models\KelasMapel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,83 +13,113 @@ class TugasController extends Controller
 {
     public function index()
     {
-        $tugass = Tugas::with(['matapelajaran', 'kelas'])
-            ->where('guru_id', Auth::id())
-            ->latest()->paginate(10);
+        // Ambil guru berdasarkan user yang login
+        $guru = Guru::where('user_id', Auth::id())->first();
 
-        return view('guru.tugas.index', compact('tugass'));
+        if (!$guru) {
+            return redirect()->back()->with('error', 'Data guru tidak ditemukan');
+        }
+
+        // Ambil tugas berdasarkan guru_id dengan relasi
+        $tugas = Tugas::with(['kelasMapel.kelas', 'kelasMapel.mapel'])
+            ->where('guru_id', $guru->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil kelas mapel untuk dropdown
+        $kelasMapel = KelasMapel::with(['kelas', 'mapel'])
+            ->where('guru_id', $guru->id)
+            ->get();
+
+        return view('guru.tugas.index', compact('tugas', 'kelasMapel'));
     }
 
     public function create()
     {
-        $mapels = MataPelajaran::all();
-        $kelas  = Kelas::all();
-        return view('guru.tugas.create', compact('mapels', 'kelas'));
+        $guru = Guru::where('user_id', Auth::id())->first();
+
+        if (!$guru) {
+            return redirect()->back()->with('error', 'Data guru tidak ditemukan');
+        }
+
+        $kelasMapel = KelasMapel::with(['kelas', 'mapel'])
+            ->where('guru_id', $guru->id)
+            ->get();
+
+        return view('guru.tugas.create', compact('kelasMapel'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'matapelajaran_id' => 'required|exists:mata_pelajarans,id',
-            'kelas_id'         => 'nullable|exists:kelas,id',
-            'judul'            => 'required|string|max:255',
-            'deskripsi'        => 'nullable|string',
-            'deadline'         => 'required|date'
+            'kelas_mapel_id' => 'required|exists:kelas_mapel,id',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'deadline' => 'nullable|date'
         ]);
 
-        $data = $request->only(['matapelajaran_id', 'kelas_id', 'judul', 'deskripsi', 'deadline']);
-        $data['guru_id'] = Auth::id();
+        // Cari guru berdasarkan user login
+        $guru = Guru::where('user_id', Auth::id())->firstOrFail();
 
-        Tugas::create($data);
+        // Pastikan kelas_mapel_id milik guru yang login
+        $kelasMapel = KelasMapel::where('id', $request->kelas_mapel_id)
+            ->where('guru_id', $guru->id)
+            ->firstOrFail();
 
-        return redirect()->route('guru.tugas.index')->with('success', 'Tugas berhasil dibuat.');
+        Tugas::create([
+            'kelas_mapel_id' => $request->kelas_mapel_id,
+            'guru_id'        => $guru->id,
+            'judul'          => $request->judul,
+            'deskripsi'      => $request->deskripsi,
+            'deadline'       => $request->deadline,
+        ]);
+
+        return redirect()->route('guru.tugas.index')
+            ->with('success', 'Tugas berhasil ditambahkan');
     }
 
-    public function show(Tugas $tugas)
+    public function update(Request $request, $id)
     {
-        $this->authorizeAccess($tugas);
-        $tugas->load('jawaban.siswa');
-        return view('guru.tugas.show', compact('tugas'));
-    }
-
-    public function edit(Tugas $tugas)
-    {
-        $this->authorizeAccess($tugas);
-        $mapels = MataPelajaran::all();
-        $kelas  = Kelas::all();
-        return view('guru.tugas.edit', compact('tugas', 'mapels', 'kelas'));
-    }
-
-    public function update(Request $request, Tugas $tugas)
-    {
-        $this->authorizeAccess($tugas);
-
         $request->validate([
-            'matapelajaran_id' => 'required|exists:mata_pelajarans,id',
-            'kelas_id'         => 'nullable|exists:kelas,id',
-            'judul'            => 'required|string|max:255',
-            'deskripsi'        => 'nullable|string',
-            'deadline'         => 'required|date'
+            'kelas_mapel_id' => 'required|exists:kelas_mapel,id',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'deadline' => 'nullable|date'
         ]);
 
-        $tugas->update($request->only(['matapelajaran_id', 'kelas_id', 'judul', 'deskripsi', 'deadline']));
+        $guru = Guru::where('user_id', Auth::id())->firstOrFail();
 
-        return redirect()->route('guru.tugas.index')->with('success', 'Tugas berhasil diperbarui.');
+        $tugas = Tugas::where('id', $id)
+            ->where('guru_id', $guru->id)
+            ->firstOrFail();
+
+        // Pastikan kelas_mapel_id milik guru yang login
+        $kelasMapel = KelasMapel::where('id', $request->kelas_mapel_id)
+            ->where('guru_id', $guru->id)
+            ->firstOrFail();
+
+        $tugas->update([
+            'kelas_mapel_id' => $request->kelas_mapel_id,
+            'judul'          => $request->judul,
+            'deskripsi'      => $request->deskripsi,
+            'deadline'       => $request->deadline,
+        ]);
+
+        return redirect()->route('guru.tugas.index')
+            ->with('success', 'Tugas berhasil diupdate');
     }
 
-    public function destroy(Tugas $tugas)
+    public function destroy($id)
     {
+        $guru = Guru::where('user_id', Auth::id())->firstOrFail();
 
+        $tugas = Tugas::where('id', $id)
+            ->where('guru_id', $guru->id)
+            ->firstOrFail();
 
-        $this->authorizeAccess($tugas);
         $tugas->delete();
-        return redirect()->route('guru.tugas.index')->with('success', 'Tugas dihapus.');
-    }
 
-    protected function authorizeAccess(Tugas $tugas)
-    {
-        if ($tugas->guru_id !== Auth::id()) {
-            abort(403, 'Tidak punya akses.');
-        }
+        return redirect()->route('guru.tugas.index')
+            ->with('success', 'Tugas berhasil dihapus');
     }
 }

@@ -42,6 +42,21 @@
                            name="telepon" id="telepon" value="{{ old('telepon') }}">
                     @error('telepon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+
+                {{-- Pilih User --}}
+                <div class="mb-3">
+                    <label for="user_id" class="form-label">Pilih Akun User (Login Guru)</label>
+                    <select name="user_id" id="user_id" class="form-select @error('user_id') is-invalid @enderror">
+                        <option value="">-- Pilih User --</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }} ({{ $user->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <small class="text-muted">Pastikan user sudah dibuat dan memiliki role 'guru'.</small>
+                </div>
             </div>
 
             <div class="card-footer d-flex justify-content-between">

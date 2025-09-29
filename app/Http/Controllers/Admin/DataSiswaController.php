@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Siswa;
 use App\Models\Kelas;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DataSiswaController extends Controller
 {
@@ -31,9 +33,23 @@ class DataSiswaController extends Controller
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
+        $email = strtolower($validated['nisn']) . '@sditompokersan.sch.id';
+
+        // Buat atau ambil user, password default SDIlmj2025
+        $user = User::firstOrCreate(
+            ['email' => $email],
+            [
+                'name' => $validated['nama'],
+                'password' => Hash::make('SDIlmj2025'),
+                'role' => 'siswa',
+            ]
+        );
+
+        $validated['user_id'] = $user->id;
         Siswa::create($validated);
 
-        return redirect()->route('admin.siswa.index')->with('success', 'Siswa berhasil ditambahkan.');
+        return redirect()->route('admin.siswa.index')
+            ->with('success', "Siswa dan akun berhasil dibuat. Email: $email | Password: SDIlmj2025");
     }
 
     public function edit(Siswa $siswa)
@@ -66,7 +82,12 @@ class DataSiswaController extends Controller
 
     public function destroy(Siswa $siswa)
     {
-        $siswa->delete();
-        return redirect()->route('admin.siswa.index')->with('success', 'Siswa berhasil dihapus.');
+        if ($siswa->user) {
+            $siswa->user->delete(); // hapus akun siswa
+        }
+
+        $siswa->delete(); // hapus data siswa
+        return redirect()->route('admin.siswa.index')
+            ->with('success', 'Siswa dan akun berhasil dihapus.');
     }
 }
