@@ -58,6 +58,15 @@
 
                 {{-- Dashboard --}}
                 <li class="nav-item">
+                    <a href="{{ route('admin.users.create') }}"
+                        class="nav-link {{ request()->is('admin/buat-akun') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user-plus"></i>
+                        <p>Buat Akun</p>
+                    </a>
+                </li>
+
+
+                <li class="nav-item">
                     <a href="{{ url($dashboardUrl) }}"
                         class="nav-link {{ request()->is(trim($dashboardUrl, '/')) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
