@@ -39,7 +39,7 @@ class DataKelasMapelController extends Controller
         ]);
 
         KelasMapel::create($request->all());
-        return redirect()->route('kelasmapel.index')->with('success', 'Data kelas-mapel berhasil ditambahkan');
+        return redirect()->route('admin.kelasmapel.index')->with('success', 'Data kelas-mapel berhasil ditambahkan');
     }
 
     public function edit(KelasMapel $kelasmapel)
@@ -59,12 +59,12 @@ class DataKelasMapelController extends Controller
         ]);
 
         $kelasmapel->update($request->all());
-        return redirect()->route('kelasmapel.index')->with('success', 'Data kelas-mapel berhasil diperbarui');
+        return redirect()->route('admin.kelasmapel.index')->with('success', 'Data kelas-mapel berhasil diperbarui');
     }
 
     public function destroy(KelasMapel $kelasmapel)
     {
         $kelasmapel->delete();
-        return redirect()->route('kelasmapel.index')->with('success', 'Data kelas-mapel berhasil dihapus');
+        return redirect()->route('admin.kelasmapel.index')->with('success', 'Data kelas-mapel berhasil dihapus');
     }
 }

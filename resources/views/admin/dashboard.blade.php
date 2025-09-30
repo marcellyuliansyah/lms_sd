@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <!-- Form Create Admin / Guru -->
+        {{-- <!-- Form Create Admin / Guru -->
         <div class="row mt-4">
             <div class="col-lg-6">
                 <div class="card shadow">
@@ -127,6 +127,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

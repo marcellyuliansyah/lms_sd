@@ -38,6 +38,7 @@
                             <th width="15%">Kelas</th>
                             <th width="20%">Judul</th>
                             <th width="25%">Deskripsi</th>
+                            <th width="15%">file</th>
                             <th width="15%">Deadline</th>
                             <th width="15%">Aksi</th>
                         </tr>
@@ -60,13 +61,25 @@
                                     <strong>{{ $t->judul }}</strong>
                                 </td>
                                 <td>
-                                    <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <div
+                                        style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{ $t->deskripsi ?: 'Tidak ada deskripsi' }}
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    @if($t->deadline)
-                                        <span class="badge {{ \Carbon\Carbon::parse($t->deadline)->isPast() ? 'bg-danger' : 'bg-success' }}">
+                                    @if ($t->file_path)
+                                        <a href="{{ asset('storage/' . $t->file_path) }}" target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                            Lihat File
+                                        </a>
+                                    @else
+                                        <span class="text-muted">Tidak ada</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if ($t->deadline)
+                                        <span
+                                            class="badge {{ \Carbon\Carbon::parse($t->deadline)->isPast() ? 'bg-danger' : 'bg-success' }}">
                                             {{ \Carbon\Carbon::parse($t->deadline)->format('d M Y') }}
                                             <br>
                                             {{ \Carbon\Carbon::parse($t->deadline)->format('H:i') }}
@@ -78,11 +91,11 @@
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-warning text-white"
-                                            onclick='openEditModal(@json($t))'
-                                            title="Edit">
+                                            onclick='openEditModal(@json($t))' title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <form action="{{ route('guru.tugas.destroy', $t->id) }}" method="POST" class="d-inline"
+                                        <form action="{{ route('guru.tugas.destroy', $t->id) }}" method="POST"
+                                            class="d-inline"
                                             onsubmit="return confirm('Yakin hapus tugas \'{{ $t->judul }}\'?')">
                                             @csrf
                                             @method('DELETE')
@@ -113,8 +126,9 @@
     <!-- Modal Tambah/Edit -->
     <div class="modal fade" id="tugasModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <form id="tugasForm" method="POST">
+            <form id="tugasForm" method="POST" enctype="multipart/form-data">
                 @csrf
+
                 <input type="hidden" name="_method" value="POST" id="formMethod">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-white">
@@ -123,7 +137,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Kelas & Mata Pelajaran <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold">Kelas & Mata Pelajaran <span
+                                    class="text-danger">*</span></label>
                             <select name="kelas_mapel_id" class="form-select" required id="kelasMapelSelect">
                                 <option value="">-- Pilih Kelas & Mata Pelajaran --</option>
                                 @foreach ($kelasMapel as $km)
@@ -135,13 +150,19 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Judul <span class="text-danger">*</span></label>
-                            <input type="text" name="judul" class="form-control" required id="judulInput" 
+                            <input type="text" name="judul" class="form-control" required id="judulInput"
                                 placeholder="Masukkan judul tugas">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Deskripsi</label>
                             <textarea name="deskripsi" class="form-control" rows="4" id="deskripsiInput"
                                 placeholder="Masukkan deskripsi tugas (opsional)"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Upload File</label>
+                            <input type="file" name="file" class="form-control" id="fileInput"
+                                accept=".pdf,.doc,.docx,.ppt,.pptx,.zip">
+                            <small class="text-muted">Format: PDF, DOC, DOCX, PPT, PPTX, ZIP (Max: 2MB)</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Deadline</label>
@@ -191,12 +212,18 @@
             document.getElementById('kelasMapelSelect').value = tugas.kelas_mapel_id
             document.getElementById('judulInput').value = tugas.judul
             document.getElementById('deskripsiInput').value = tugas.deskripsi ?? ''
-            
+
             if (tugas.deadline) {
                 // Format datetime untuk input datetime-local
                 const deadline = new Date(tugas.deadline)
                 const formattedDeadline = deadline.toISOString().slice(0, 16)
                 document.getElementById('deadlineInput').value = formattedDeadline
+            }
+
+            if (tugas.file_path) {
+                document.getElementById('fileInput').insertAdjacentHTML('afterend',
+                    `<small class="text-success">File sudah ada: <a href="/storage/${tugas.file_path}" target="_blank">Lihat</a></small>`
+                )
             }
 
             modal.show()
@@ -217,13 +244,13 @@
         form.addEventListener('submit', function(e) {
             const judul = document.getElementById('judulInput').value.trim()
             const kelasMapel = document.getElementById('kelasMapelSelect').value
-            
+
             if (!judul || !kelasMapel) {
                 e.preventDefault()
                 alert('Harap lengkapi field yang wajib diisi!')
                 return false
             }
-            
+
             submitBtn.disabled = true
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...'
         })

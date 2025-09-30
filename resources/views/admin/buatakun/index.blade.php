@@ -16,7 +16,7 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
-                    <form action="{{ route('admin.users.create') }}" method="POST">
+                    <form action="{{ route('admin.buatakun.store') }}" method="POST">
                         @csrf
                         <div class="form-group mb-3">
                             <label>Nama</label>
@@ -52,5 +52,4 @@
             </div>
         </div>
     </div>
-
 @endsection

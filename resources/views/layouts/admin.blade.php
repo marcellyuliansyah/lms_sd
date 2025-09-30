@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - LMS SD</title>
+    
 
     {{-- AdminLTE CSS --}}
     <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}">

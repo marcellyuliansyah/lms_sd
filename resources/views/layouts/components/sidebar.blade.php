@@ -58,15 +58,6 @@
 
                 {{-- Dashboard --}}
                 <li class="nav-item">
-                    <a href="{{ route('admin.users.create') }}"
-                        class="nav-link {{ request()->is('admin/buat-akun') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-user-plus"></i>
-                        <p>Buat Akun</p>
-                    </a>
-                </li>
-
-
-                <li class="nav-item">
                     <a href="{{ url($dashboardUrl) }}"
                         class="nav-link {{ request()->is(trim($dashboardUrl, '/')) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -81,12 +72,14 @@
                         Manajemen Data
                     </li>
 
+
+
                     {{-- Manajemen Pengguna --}}
                     <li
-                        class="nav-item {{ request()->is('admin/guru*') || request()->is('admin/siswa*') ? 'menu-open' : '' }}">
+                        class="nav-item {{ request()->is('admin/guru*') || request()->is('admin/siswa*') || request()->is('admin/buat-akun') ? 'menu-open' : '' }}">
                         <a href="#"
-                            class="nav-link {{ request()->is('admin/guru*') || request()->is('admin/siswa*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-users-cog"></i>
+                            class="nav-link {{ request()->is('admin/guru*') || request()->is('admin/siswa*') || request()->is('admin/buat-akun') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-users-cog"></i>  
                             <p>
                                 Manajemen Pengguna
                                 <i class="right fas fa-angle-left"></i>
@@ -94,6 +87,13 @@
 
                         </a>
                         <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.buatakun.index') }}"
+                                    class="nav-link {{ request()->is('admin/buat-akun*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Buat Akun</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.guru.index') }}"
                                     class="nav-link {{ request()->is('admin/guru*') ? 'active' : '' }}">
@@ -214,17 +214,26 @@
                         Menu Siswa
                     </li>
 
+                    {{-- tugas dari guru --}}
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('siswa/jadwal*') ? 'active' : '' }}">
+                        
+                        <a href="#" class="nav-link {{ request()->is('siswa/kelas*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>Jadwal Ujian</p>
+                            <p>kelas saya</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        
+                        <a href="{{ route('siswa.tugas.index') }}" class="nav-link {{ request()->is('siswa/jadwal*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>Tugas</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a href="#" class="nav-link {{ request()->is('siswa/ujian*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-edit"></i>
-                            <p>Ujian Saya</p>
+                            <p>Materi</p>
                         </a>
                     </li>
 

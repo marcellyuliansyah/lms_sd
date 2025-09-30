@@ -9,7 +9,7 @@ class Guru extends Model
 {
     use HasFactory;
 
-   protected $fillable = ['nama', 'nip', 'email', 'telepon', 'user_id'];
+   protected $fillable = ['nama', 'nip', 'email', 'telepon','password', 'user_id'];
 
     public function kelasMapel()
     {

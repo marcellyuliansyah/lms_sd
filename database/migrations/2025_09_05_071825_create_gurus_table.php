@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('gurus', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('nip')->unique();
-            $table->string('email')->unique();
+            $table->string('nip')->nullable()->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('telepon')->nullable();
+            $table->string('password');
             $table->timestamps();
 
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');

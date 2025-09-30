@@ -55,16 +55,21 @@ class TugasController extends Controller
             'kelas_mapel_id' => 'required|exists:kelas_mapel,id',
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'deadline' => 'nullable|date'
+            'deadline' => 'nullable|date',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:2048',
         ]);
 
-        // Cari guru berdasarkan user login
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
 
-        // Pastikan kelas_mapel_id milik guru yang login
         $kelasMapel = KelasMapel::where('id', $request->kelas_mapel_id)
             ->where('guru_id', $guru->id)
             ->firstOrFail();
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('tugas', 'public');
+        }
+
 
         Tugas::create([
             'kelas_mapel_id' => $request->kelas_mapel_id,
@@ -72,6 +77,7 @@ class TugasController extends Controller
             'judul'          => $request->judul,
             'deskripsi'      => $request->deskripsi,
             'deadline'       => $request->deadline,
+            'file_path'      => $filePath,
         ]);
 
         return redirect()->route('guru.tugas.index')

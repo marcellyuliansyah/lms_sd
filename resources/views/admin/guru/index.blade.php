@@ -70,6 +70,7 @@
                                 <th>NIP</th>
                                 <th>Email</th>
                                 <th>Telepon</th>
+                                <th>Password</th>
                                 <th width="20%">Aksi</th>
                             </tr>
                         </thead>
@@ -106,6 +107,9 @@
                                         @endif
                                     </td>
                                     <td>
+                                        {{ $guru->password }}
+                                    </td>
+                                    <td>
                                         <a href="{{ route('admin.guru.edit', $guru->id) }}" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -127,7 +131,8 @@
                                             Tidak ada data guru yang sesuai dengan pencarian
                                             "<strong>{{ request('search') }}</strong>"
                                             <br>
-                                            <a href="{{ route('admin.guru.index') }}" class="btn btn-sm btn-outline-primary mt-2">
+                                            <a href="{{ route('admin.guru.index') }}"
+                                                class="btn btn-sm btn-outline-primary mt-2">
                                                 <i class="fas fa-arrow-left"></i> Kembali ke semua data
                                             </a>
                                         @else
@@ -167,7 +172,7 @@
     @push('scripts')
         <script>
             // 🔔 Auto-hide alert setelah 5 detik
-            document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function() {
                 let alertBox = document.getElementById("alertBox");
                 if (alertBox) {
                     setTimeout(() => {
@@ -176,8 +181,27 @@
                     }, 5000);
                 }
             });
+
+            // 🔑 Toggle password show/hide
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.toggle-password').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        let span = this.previousElementSibling;
+                        if (span.innerText === '********') {
+                            // tampilkan password asli (hash atau plaintext dari DB)
+                            span.innerText = span.getAttribute('data-password');
+                            this.innerText = 'Hide';
+                        } else {
+                            // sembunyikan lagi
+                            span.innerText = '********';
+                            this.innerText = 'Show';
+                        }
+                    });
+                });
+            });
         </script>
     @endpush
+
 
     @push('styles')
         <style>
