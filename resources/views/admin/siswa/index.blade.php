@@ -52,14 +52,14 @@
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th style="width: 50px;">#</th>
-                                            <th>Nama</th>
-                                            <th>NISN</th>
-                                            <th>Tanggal Lahir</th>
-                                            <th>Kelas</th>
-                                            <th>Email</th>
-                                            <th>Password</th>
-                                            <th style="width: 150px;">Aksi</th>
+                                            <th width="5%">No</th>
+                                            <th width="15%">Nama</th>
+                                            <th width="15%">NISN</th>
+                                            <th width="20%">Tanggal Lahir</th>
+                                            <th width="10%">Kelas</th>
+                                            <th width="10%">Email</th>
+                                            <th width="10%">Password</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>

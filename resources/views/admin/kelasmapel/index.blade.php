@@ -8,11 +8,18 @@
             <div class="col-12">
 
                 <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Data Kelas Mata Pelajaran</h1>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKelasMapelModal">
-                        <i class="fas fa-plus"></i> Tambah Kelas Mapel
-                    </button>
+                <div class="bg-gradient-navy text-white rounded-3 p-3 mb-3 shadow">
+                    <div class="row align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1 class="h3">
+                                <i class="fas fa-school"></i> Data Kelas Mata Pelajaran
+                            </h1>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addKelasMapelModal">
+                                <i class="fas fa-plus-circle"></i> Tambah Kelas Mapel
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Alert Messages -->
@@ -29,11 +36,11 @@
                             <table class="table table-bordered table-hover">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>No</th>
+                                        <th width="5%">No</th>
                                         <th>Mata Pelajaran</th>
                                         <th>Guru Pengajar</th>
                                         <th>Kelas</th>
-                                        <th>Aksi</th>
+                                        <th width="20%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,20 +51,18 @@
                                             <td>{{ $item->guru->nama ?? 'Belum Ditentukan' }}</td>
                                             <td>{{ $item->kelas->nama ?? '-' }}</td>
                                             <td>
-                                                <div class="btn-group">
-                                                    <!-- Edit -->
-                                                    <button type="button" class="btn btn-sm btn-warning"
-                                                        onclick="editKelasMapel('{{ $item->id }}','{{ $item->mapel_id }}','{{ $item->guru_id }}','{{ $item->kelas_id }}')"
-                                                        data-bs-toggle="modal" data-bs-target="#editKelasMapelModal">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <!-- Delete -->
-                                                    <button type="button" class="btn btn-sm btn-danger"
-                                                        onclick="deleteKelasMapel('{{ $item->id }}','{{ $item->mapel->nama }}')"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteKelasMapelModal">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
+                                                <!-- Edit -->
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                    onclick="editKelasMapel('{{ $item->id }}','{{ $item->mapel_id }}','{{ $item->guru_id }}','{{ $item->kelas_id }}')"
+                                                    data-bs-toggle="modal" data-bs-target="#editKelasMapelModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <!-- Delete -->
+                                                <button type="button" class="btn btn-sm btn-danger"
+                                                    onclick="deleteKelasMapel('{{ $item->id }}','{{ $item->mapel->nama }}')"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteKelasMapelModal">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @empty
@@ -70,7 +75,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -205,5 +209,43 @@
                 document.getElementById('delete_nama').textContent = nama;
             }
         </script>
+    @endpush
+
+    @push('styles')
+        <style>
+            .table th {
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+
+            .btn-group .btn {
+                margin-right: 2px;
+            }
+
+            .btn-group .btn:last-child {
+                margin-right: 0;
+            }
+
+            .modal-header {
+                border-bottom: 2px solid #dee2e6;
+            }
+
+            .modal-footer {
+                border-top: 2px solid #dee2e6;
+            }
+
+            .badge {
+                font-size: 0.8rem;
+            }
+
+            .card {
+                border: none;
+                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            }
+
+            .table-responsive {
+                border-radius: 0.35rem;
+            }
+        </style>
     @endpush
 @endsection

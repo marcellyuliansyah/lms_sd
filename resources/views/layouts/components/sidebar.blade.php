@@ -1,11 +1,12 @@
 {{-- components/sidebar.blade.php --}}
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar bg-gradient-green elevation-4">
 
     {{-- Brand Logo --}}
     <a href="{{ url('/') }}" class="brand-link text-decoration-none">
-        <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
-            class="brand-image img-circle elevation-3" style="opacity: 0.8">
-        <span class="brand-text font-weight-light">LMS SDI Tompokersan</span>
+        <img src="{{ asset('assets/logo_sdi.PNG') }}" alt="logo_sdi" class="brand-image img-circle elevation-3"
+            style="opacity: 0.8">
+        <span class="brand-text font-weight-light">LMS SDI</span>
+        <small class="brand-subtitle font-light">Tompokersan</small>
     </a>
 
     {{-- Sidebar --}}
@@ -29,8 +30,7 @@
 
         {{-- Sidebar Menu --}}
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 @php
                     $user = Auth::user();
                     $role = $user->role ?? '';
@@ -82,6 +82,7 @@
                                 Manajemen Pengguna
                                 <i class="right fas fa-angle-left"></i>
                             </p>
+
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -103,9 +104,9 @@
 
                     {{-- Manajemen Akademik --}}
                     <li
-                        class="nav-item {{ request()->is('admin/kelas*') || request()->is('admin/mapel*') ? 'menu-open' : '' }}">
+                        class="nav-item {{ request()->routeIs('admin.kelas.*') || request()->routeIs('admin.mapel.*') || request()->routeIs('admin.kelasmapel.*') ? 'menu-open' : '' }}">
                         <a href="#"
-                            class="nav-link {{ request()->is('admin/kelas*') || request()->is('admin/mapel*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('admin.kelas.*') || request()->routeIs('admin.mapel.*') || request()->routeIs('admin.kelasmapel.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-graduation-cap"></i>
                             <p>
                                 Manajemen Akademik
@@ -115,21 +116,21 @@
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('admin.kelas.index') }}"
-                                    class="nav-link {{ request()->is('admin/kelas*') ? 'active' : '' }}">
+                                    class="nav-link {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Kelas</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.mapel.index') }}"
-                                    class="nav-link {{ request()->is('admin/mapel*') ? 'active' : '' }}">
+                                    class="nav-link {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Data Mapel</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.kelasmapel.index') }}"
-                                    class="nav-link {{ request()->is('admin/mapel*') ? 'active' : '' }}">
+                                    class="nav-link {{ request()->routeIs('admin.kelasmapel.*') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Kelas Mapel</p>
                                 </a>
@@ -238,7 +239,7 @@
 {{-- Custom Styles untuk Sidebar --}}
 <style>
     .sidebar .nav-header {
-        color: #6c757d;
+        color: #ffffffff;
         font-size: 0.75rem;
         letter-spacing: 0.5px;
         margin-top: 1rem;
@@ -246,9 +247,10 @@
     }
 
     .sidebar .nav-link {
+        color: #ffffffff;
         transition: all 0.3s ease;
         border-radius: 0.25rem;
-        margin: 0.1rem 0.5rem;
+        margin: 0.1rem 0rem;
     }
 
     .sidebar .nav-link:hover {
@@ -262,7 +264,7 @@
     }
 
     .sidebar .nav-treeview .nav-link {
-        padding-left: 2.5rem;
+        padding-left: 1rem;
         font-size: 0.9rem;
     }
 

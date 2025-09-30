@@ -11,15 +11,21 @@
             </div>
         @endif
 
-        <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                <h3 class="card-title mb-0">
-                    <i class="fas fa-chalkboard-teacher me-2"></i> Data Guru
-                </h3>
-                <a href="{{ route('admin.guru.create') }}" class="btn btn-primary btn-sm mt-2 mt-md-0">
-                    <i class="fas fa-plus-circle"></i> Tambah Guru
-                </a>
+
+        <div class="bg-gradient-navy text-white rounded-3 p-3 mb-3 shadow">
+            <div class="row align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3">
+                        <i class="fas fa-chalkboard-teacher"></i> Data Guru
+                    </h1>
+                    <a href="{{ route('admin.guru.create') }}" class="btn btn-primary btn-sm mt-2 mt-md-0">
+                        <i class="fas fa-plus-circle"></i> Tambah Guru
+                    </a>
+                </div>
             </div>
+        </div>
+
+        <div class="card shadow-sm">
 
             <div class="card-body">
                 {{-- Search Form --}}
@@ -57,7 +63,7 @@
                 {{-- Table --}}
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <thead class="table-light">
+                        <thead class="table-dark">
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Nama</th>
@@ -101,14 +107,14 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.guru.edit', $guru->id) }}" class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit"></i> Edit
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="{{ route('admin.guru.destroy', $guru->id) }}" method="POST"
                                             class="d-inline" onsubmit="return confirm('Yakin hapus guru ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-danger">
-                                                <i class="fas fa-trash-alt"></i> Hapus
+                                                <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
                                     </td>
@@ -121,8 +127,7 @@
                                             Tidak ada data guru yang sesuai dengan pencarian
                                             "<strong>{{ request('search') }}</strong>"
                                             <br>
-                                            <a href="{{ route('admin.guru.index') }}"
-                                                class="btn btn-sm btn-outline-primary mt-2">
+                                            <a href="{{ route('admin.guru.index') }}" class="btn btn-sm btn-outline-primary mt-2">
                                                 <i class="fas fa-arrow-left"></i> Kembali ke semua data
                                             </a>
                                         @else
@@ -162,7 +167,7 @@
     @push('scripts')
         <script>
             // 🔔 Auto-hide alert setelah 5 detik
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 let alertBox = document.getElementById("alertBox");
                 if (alertBox) {
                     setTimeout(() => {
@@ -172,5 +177,43 @@
                 }
             });
         </script>
+    @endpush
+
+    @push('styles')
+        <style>
+            .table th {
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+
+            .btn-group .btn {
+                margin-right: 2px;
+            }
+
+            .btn-group .btn:last-child {
+                margin-right: 0;
+            }
+
+            .modal-header {
+                border-bottom: 2px solid #dee2e6;
+            }
+
+            .modal-footer {
+                border-top: 2px solid #dee2e6;
+            }
+
+            .badge {
+                font-size: 0.8rem;
+            }
+
+            .card {
+                border: none;
+                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            }
+
+            .table-responsive {
+                border-radius: 0.35rem;
+            }
+        </style>
     @endpush
 @endsection
