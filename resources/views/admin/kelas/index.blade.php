@@ -7,11 +7,18 @@
         <div class="row">
             <div class="col-12">
                 <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Manajemen Kelas</h1>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKelasModal">
-                        <i class="fas fa-plus"></i> Tambah Kelas
-                    </button>
+                <div class="bg-gradient-navy text-white rounded-3 p-3 mb-3 shadow">
+                    <div class="row align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1 class="h3">
+                                <i class="fas fa-school"></i> Manajemen Kelas
+                            </h1>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addKelasModal">
+                                <i class="fas fa-plus-circle"></i> Tambah Kelas
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Alert Messages -->
@@ -38,8 +45,8 @@
                                         <th width="5%">No</th>
                                         <th width="25%">Kelas</th>
                                         <th width="30%">Wali Kelas</th>
-                                        <th width="15%">Jumlah Siswa</th>
-                                        <th width="25%">Aksi</th>
+                                        <th width="20%">Jumlah Siswa</th>
+                                        <th width="20%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -60,19 +67,19 @@
                                                 <span class="badge bg-info">{{ $item->siswas_count }} Siswa</span>
                                             </td>
                                             <td>
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-sm btn-info"
-                                                        data-bs-toggle="modal" data-bs-target="#showKelasModal"
+                                                <div>
+                                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                                        data-bs-target="#showKelasModal"
                                                         onclick="showKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->waliKelas ? $item->waliKelas->nama : 'Belum Ditentukan' }}', '{{ $item->siswas_count }}')">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-warning"
-                                                        data-bs-toggle="modal" data-bs-target="#editKelasModal"
+                                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                        data-bs-target="#editKelasModal"
                                                         onclick="editKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->wali_kelas_id }}')">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-danger"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteKelasModal"
+                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteKelasModal"
                                                         onclick="deleteKelas('{{ $item->id }}', '{{ $item->nama }}', '{{ $item->siswas_count }}')">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -123,8 +130,7 @@
                                 name="wali_kelas_id">
                                 <option value="">Pilih Wali Kelas (Opsional)</option>
                                 @foreach ($gurus as $guru)
-                                    <option value="{{ $guru->id }}"
-                                        {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
+                                    <option value="{{ $guru->id }}" {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
                                         {{ $guru->nama }}
                                     </option>
                                 @endforeach
@@ -156,8 +162,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="edit_nama" class="form-label">Nama Kelas <span
-                                    class="text-danger">*</span></label>
+                            <label for="edit_nama" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="edit_nama" name="nama" required>
                         </div>
                         <div class="mb-3">
@@ -230,7 +235,8 @@
                         <div id="delete_warning" style="display: none;">
                             <div class="alert alert-danger">
                                 <i class="fas fa-times-circle"></i>
-                                Kelas ini masih memiliki <strong id="delete_jumlah_siswa"></strong> siswa dan tidak dapat
+                                Kelas ini masih memiliki <strong id="delete_jumlah_siswa"></strong> siswa dan tidak
+                                dapat
                                 dihapus.
                             </div>
                         </div>
@@ -276,10 +282,10 @@
             }
 
             // Auto hide alerts after 5 seconds
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    setTimeout(function() {
+                alerts.forEach(function (alert) {
+                    setTimeout(function () {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
                     }, 2000);
